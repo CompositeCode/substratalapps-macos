@@ -95,6 +95,17 @@ jobs:
             --commit "$GITHUB_SHA" \
             --summary "$(git log -1 --format=%s)"
 
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+      - id: deploy
+        uses: actions/deploy-pages@v5
+
+      # Only after a successful deploy: a failed deploy (Pages off, an outage)
+      # must not use up a version number in the archive.
       - name: Commit snapshot to help-versions
         working-directory: _archive
         env:
@@ -116,12 +127,3 @@ jobs:
           git add -A
           git commit -m "Archive help v$VERSION from ${GITHUB_SHA::7}"
           git push origin help-versions
-
-      - uses: actions/configure-pages@v6
-
-      - uses: actions/upload-pages-artifact@v5
-        with:
-          path: _site
-
-      - id: deploy
-        uses: actions/deploy-pages@v5
