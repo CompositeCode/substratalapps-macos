@@ -1,12 +1,11 @@
-# Keeps the app and the Help Center in step with their two upstreams:
+# Keeps the app in step with its two upstreams:
 #   - the Platform API's openapi.yaml (CompositeCode/substratalapps.com, main = production)
 #   - the macOS screen inventory (CompositeCode/substratalapps-applications-specs)
 #
 # When either changed, it opens (or updates) one pull request with the new
 # vendored spec and screen catalog. CI then has to build the app's generated
-# client against the new spec and rebuild the Help Center before it can merge,
-# and merging publishes the new docs through help.yml. Nothing reaches main
-# unreviewed.
+# client against the new spec, and check its Help links against the help
+# center, before it can merge. Nothing reaches main unreviewed.
 #
 # Triggers: daily, by hand, or immediately from the upstream repos with a
 # repository_dispatch, for example as a last step of the API's deploy.yml:
@@ -76,11 +75,11 @@ jobs:
           - Platform API \`openapi.yaml\`: **${API}** (from \`CompositeCode/substratalapps.com@main\`)
           - Screen catalog: re-imported from \`CompositeCode/substratalapps-applications-specs\`
 
-          CI rebuilds the generated client against the new spec and rebuilds the Help Center. Before merging:
+          CI rebuilds the generated client against the new spec and checks the app's Help links. Before merging:
           - Breaking changes ship as a new \`Substratal-Version\`. If \`components.parameters.ApiVersion\` gained a value, moving to it is a deliberate code change (\`APIVersion.current\`), not part of this PR.
           - Add a line under **Unreleased** in \`CHANGELOG.md\` if people will notice.
 
-          Merging publishes a new Help Center version.
+          Merging notifies the Hub help center (docs-dispatch.yml), which rebuilds.
           EOF
           )
           if gh pr view "$branch" >/dev/null 2>&1; then

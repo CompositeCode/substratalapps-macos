@@ -1,57 +1,48 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Checks a built Help Center against the app, so the app can never link to a
-# help page that doesn't exist.
+# Checks the app's Help links against a build of the shared Hub help center
+# (CompositeCode/substratalapps-applications-specs, `npm run build` → _site/help),
+# so the app can never open a help page that doesn't exist.
 #
-#   scripts/help-check.rb SITE_DIR
+#   scripts/help-check.rb HELP_DIR        e.g. ../substratalapps-applications-specs/_site/help
 #
 # Fails when:
-#   - a screen in the catalog has no page at screens/<id>/
-#   - a page HelpLinks.swift links to (page("…")) wasn't built
-#   - the vendored openapi.yaml wasn't published at api/openapi.yaml
-#   - an internal link in the built site points at a page that doesn't exist
+#   - a screen in this app's catalog has no page at screens/<id>.html
+#   - a page HelpLinks.swift opens (page("…")) isn't in the build
+#   - a #fragment HelpLinks.swift uses isn't an id on that page
 
 require "json"
-require "set"
 
 ROOT = File.expand_path("..", __dir__)
-site = File.expand_path(ARGV[0] || File.join(ROOT, "help", "_site"))
-abort "help-check: #{site} doesn't exist; build the site first" unless File.directory?(site)
-baseurl = "/substratalapps-macos"
+help = File.expand_path(ARGV[0] || File.join(ROOT, "..", "substratalapps-applications-specs", "_site", "help"))
+abort "help-check: #{help} doesn't exist; build the specs site first (npm ci && npm run build)" unless File.directory?(help)
 problems = []
 
 catalog = JSON.parse(File.read(File.join(ROOT, "Packages/SubstratalKit/Sources/SubstratalKit/Resources/screens.json")))
 catalog.fetch("screens").each do |screen|
-  page = File.join(site, "screens", screen["id"].downcase, "index.html")
-  problems << "no help page for #{screen['id']} (expected screens/#{screen['id'].downcase}/)" unless File.exist?(page)
+  page = File.join(help, "screens", "#{screen['id'].downcase}.html")
+  problems << "no help page for #{screen['id']} (screens/#{screen['id'].downcase}.html)" unless File.exist?(page)
 end
 
-help_links = File.read(File.join(ROOT, "Packages/SubstratalKit/Sources/SubstratalKit/Help/HelpLinks.swift"))
-help_links.scan(/page\("([^"\\]+)"\)/).flatten.each do |path|
-  problems << "HelpLinks.swift links to #{path}, which wasn't built" unless File.exist?(File.join(site, path, "index.html"))
-end
-
-problems << "api/openapi.yaml wasn't published" unless File.exist?(File.join(site, "api", "openapi.yaml"))
-
-# Internal links, skipping archived snapshots (each was checked when it was built).
-pages = Dir.glob(File.join(site, "**", "*.html")).reject { |f| f.include?("/versions/") && !f.end_with?("versions/index.html") }
-checked = Set.new
-pages.each do |file|
-  File.read(file).scan(/href="(#{Regexp.escape(baseurl)}\/[^"#?]*)/).flatten.each do |href|
-    next if href.include?("/versions/") || checked.include?(href)
-
-    checked << href
-    rel = href.delete_prefix(baseurl)
-    target = File.join(site, rel)
-    ok = File.file?(target) || File.exist?(File.join(target, "index.html"))
-    problems << "broken link #{href} (in #{file.delete_prefix(site)})" unless ok
+source = File.read(File.join(ROOT, "Packages/SubstratalKit/Sources/SubstratalKit/Help/HelpLinks.swift"))
+version = File.read(File.join(ROOT, "Packages/SubstratalKit/Sources/SubstratalKit/API/APIVersion.swift"))[/current: .*= \._(\d+)/, 1]
+# screen(_:) builds screens/<id>.html per screen; the catalog loop above covers it.
+links = source.scan(/page\("([^"]+)"(?:, fragment: "([^"]+)")?\)/).reject { |path, _| path.include?('\(id') }
+abort "help-check: no page(...) links found in HelpLinks.swift" if links.empty?
+links.each do |path, fragment|
+  path = path.gsub('\(APIVersion.headerValue)', version.to_s)
+  file = File.join(help, path)
+  unless File.exist?(file)
+    problems << "HelpLinks.swift opens #{path}, which isn't in the help center"
+    next
   end
+  problems << "HelpLinks.swift opens #{path}##{fragment}, but that page has no id=\"#{fragment}\"" if fragment && !File.read(file).include?(%(id="#{fragment}"))
 end
 
 if problems.empty?
-  puts "help-check: ok (#{catalog['screens'].size} screens, #{checked.size} internal links)"
+  puts "help-check: ok (#{catalog['screens'].size} screens, #{links.size} help links)"
 else
-  warn problems.uniq.map { |p| "help-check: #{p}" }
+  warn problems.map { |p| "help-check: #{p}" }
   exit 1
 end

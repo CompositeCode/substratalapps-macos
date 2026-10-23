@@ -34,6 +34,6 @@
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>SubstratalHelpBaseURL</key>
-	<string>https://compositecode.github.io/substratalapps-macos/</string>
+	<string>https://compositecode.github.io/substratalapps-applications-specs/help/</string>
 </dict>
 </plist>

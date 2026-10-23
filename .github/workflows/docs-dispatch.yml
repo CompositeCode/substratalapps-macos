@@ -1,0 +1,37 @@
+# Tells the shared Hub help center (CompositeCode/substratalapps-applications-specs)
+# that this app changed, so it rebuilds and republishes straight away instead of
+# waiting for its daily build. That help center is this app's documentation:
+# every Help menu item and screen page the app opens lives there (HelpLinks.swift).
+#
+# Needs the secret SPECS_DOCS_TOKEN: a fine-grained token with Contents: read
+# and write on substratalapps-applications-specs (see that repo's help/README.md
+# → Automation). Without it, this job skips with a notice and the help center
+# still picks changes up on its daily schedule.
+name: Docs dispatch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "App/**"
+      - "Packages/SubstratalKit/Sources/**"
+      - "CHANGELOG.md"
+      - "project.yml"
+  workflow_dispatch:
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify the help center
+        env:
+          GH_TOKEN: ${{ secrets.SPECS_DOCS_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::notice::SPECS_DOCS_TOKEN isn't set; the help center will rebuild on its daily schedule."
+            exit 0
+          fi
+          gh api repos/CompositeCode/substratalapps-applications-specs/dispatches \
+            -f event_type=app-docs-updated \
+            -F 'client_payload[app]=macos' \
+            -F "client_payload[sha]=$GITHUB_SHA"

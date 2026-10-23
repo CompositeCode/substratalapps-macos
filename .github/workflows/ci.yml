@@ -1,6 +1,7 @@
 # Every push and pull request: the shared package's tests, an app build, and a
-# full Help Center build with its link check, so a change that breaks the app
-# or leaves a help page behind can't reach main.
+# check that every Help link the app opens exists in a fresh build of the
+# shared Hub help center, so a change that breaks the app or a help link can't
+# reach main.
 name: CI
 
 on:
@@ -50,20 +51,20 @@ jobs:
             -skipPackagePluginValidation -skipMacroValidation \
             CODE_SIGNING_ALLOWED=NO build
 
-  help:
-    name: Build and check the Help Center
+  help-links:
+    name: Help links resolve in the Hub help center
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@v7
         with:
-          ruby-version: "3.2"
-          bundler-cache: true
-          working-directory: help
-      - name: Generate app-derived pages
-        run: ruby scripts/help-generate.rb --commit "$GITHUB_SHA"
-      - name: Build
-        working-directory: help
-        run: bundle exec jekyll build --destination _site
-      - name: Check every app help link and internal link
-        run: ruby scripts/help-check.rb help/_site
+          repository: CompositeCode/substratalapps-applications-specs
+          path: _specs
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Build the help center
+        working-directory: _specs
+        run: npm ci && npm run build
+      - name: Check every screen page and Help menu link
+        run: ruby scripts/help-check.rb _specs/_site/help

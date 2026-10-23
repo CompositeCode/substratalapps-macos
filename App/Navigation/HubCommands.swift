@@ -38,12 +38,14 @@ struct HubCommands: Commands {
             .disabled(navigation == nil)
             Divider()
             Button("Getting Started") { openURL(model.help.gettingStarted) }
-            Button("Tutorials") { openURL(model.help.tutorials) }
+            Button("Using the Hub on macOS") { openURL(model.help.macOSGuide) }
             Button("Keyboard Shortcuts") { openURL(model.help.shortcuts) }
+            Button("Troubleshooting") { openURL(model.help.troubleshooting) }
             Button("Frequently Asked Questions") { openURL(model.help.faq) }
-            Button("Release Notes") { openURL(model.help.releaseNotes) }
+            Button("What's New") { openURL(model.help.whatsNew) }
             Divider()
             Button("API Reference") { openURL(model.help.apiExplorer) }
+            Button("API Versioning") { openURL(model.help.apiVersioning) }
             Button("API Specification") { openURL(HelpLinks.apiSpecification) }
         }
     }

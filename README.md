@@ -3,7 +3,7 @@
 The native macOS client for the [Substratal Apps Platform API](https://compositecode.github.io/substratalapps.com/): the Hub that staff and app developers use to run the platform (users, access, roles, Applications, API keys, webhooks, tenants and the audit log), plus every person's own apps, inbox, account and plan.
 
 - **UI spec:** [substratalapps-applications-specs → macOS](https://compositecode.github.io/substratalapps-applications-specs/) (75 screens, the source of truth for screens, copy and behavior)
-- **Help Center:** [`help/`](help/), published to [compositecode.github.io/substratalapps-macos](https://compositecode.github.io/substratalapps-macos/)
+- **Help:** the shared [Substratal Hub help center](https://compositecode.github.io/substratalapps-applications-specs/help/), the one documentation reference for every Hub app. Its source is `help/` in the [specs repo](https://github.com/CompositeCode/substratalapps-applications-specs); the macOS pages are [Using the Hub on macOS](https://compositecode.github.io/substratalapps-applications-specs/help/guides/macos.html) and [Troubleshooting](https://compositecode.github.io/substratalapps-applications-specs/help/guides/troubleshooting.html).
 - **Plans:** [docs/PLAN-management-app.md](docs/PLAN-management-app.md) · [docs/PLAN-api-gaps.md](docs/PLAN-api-gaps.md) · [docs/PREREQUISITES.md](docs/PREREQUISITES.md)
 
 ## Status
@@ -31,7 +31,7 @@ GET https://api.substratalapps.com/users/me      ← no /v1
 Substratal-Version: 1
 ```
 
-`/v1/…` paths return `404`. The version is the compile-time constant `APIVersion.current` in `SubstratalKit`, and `VersionMiddleware` adds the header to every request, so no call can forget it. Moving to a new API version is a code change, never configuration. See [help/api/versioning.md](help/api/versioning.md).
+`/v1/…` paths return `404`. The version is the compile-time constant `APIVersion.current` in `SubstratalKit`, and `VersionMiddleware` adds the header to every request, so no call can forget it. Moving to a new API version is a code change, never configuration. See [API versioning](https://compositecode.github.io/substratalapps-applications-specs/help/developers/api-versioning.html) in the help center.
 
 ## Layout
 
@@ -48,23 +48,22 @@ Substratal-Version: 1
 │   ├── Sources/SubstratalAPI/   openapi.yaml → generated client (swift-openapi-generator, at build time)
 │   └── Sources/SubstratalKit/   API middleware and versioning, sessions + Keychain, Capabilities,
 │                                screen catalog + routes, help links, theme, domain services
-├── help/                        Help Center (Jekyll + just-the-docs, the same stack as the API docs)
-├── scripts/                     sync-openapi.sh, import-screens.rb, help-generate/build/check.rb
+├── scripts/                     sync-openapi.sh, import-screens.rb, help-check.rb
 ├── docs/                        Plans and the prerequisites check
 ├── project.yml                  XcodeGen definition (the .xcodeproj is generated, not committed)
-└── .github/workflows/           ci.yml, help.yml, upstream-sync.yml
+└── .github/workflows/           ci.yml, upstream-sync.yml, docs-dispatch.yml
 ```
 
 ## Getting started
 
-Requirements: Xcode 26 or later, macOS 15 or later, [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`), and Ruby with Bundler for the Help Center.
+Requirements: Xcode 26 or later, macOS 15 or later, [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`), Ruby for the scripts, and Node.js to build the help center for `make help-check`.
 
 ```bash
 make project     # generate SubstratalHub.xcodeproj
 make build       # or open SubstratalHub.xcodeproj and run the SubstratalHub scheme
 make run         # build and launch against production
 make test        # SubstratalKit unit tests
-make help-serve  # Help Center at http://localhost:4000/substratalapps-macos/
+make help-check  # check the app's Help links against ../substratalapps-applications-specs
 make check       # everything CI runs
 ```
 
@@ -90,16 +89,19 @@ Two upstreams feed this repo, and both are vendored by script, never edited by h
 
 | File | From | Refresh |
 |---|---|---|
-| `Packages/SubstratalKit/Sources/SubstratalAPI/openapi.yaml`, `help/api/openapi.yaml` | API repo `docs/openapi.yaml` on `main` | `make sync-api` |
+| `Packages/SubstratalKit/Sources/SubstratalAPI/openapi.yaml` | API repo `docs/openapi.yaml` on `main` | `make sync-api` |
 | `Packages/SubstratalKit/Sources/SubstratalKit/Resources/screens.json` | Specs repo `macos/SCREENS.md` | `make sync-screens` |
 
-The screen catalog drives the sidebar, menus, routes and deep links, and generates one Help Center page per screen. The app's help links and the site therefore can't disagree, and CI checks that they don't.
+The screen catalog drives the sidebar, menus, routes and deep links. The help center generates its screen pages from the same spec, and CI checks that every screen and Help menu link the app opens exists there.
 
 ## Documentation workflow
 
-- **Every change to the app** that reaches `main` publishes a new Help Center version (`help.yml`). Screen pages, keyboard shortcuts, "Coming soon" banners, release notes (from `CHANGELOG.md`) and the API reference are generated from the code and the vendored spec each time.
-- **Every API change** is picked up by `upstream-sync.yml`, which runs daily, by hand, or on a `repository_dispatch` from the API repo. It opens a pull request that updates the generated client and the docs together. CI must build the app against the new spec before it can merge.
-- **Every published version** is frozen at `/versions/<n>/`, labelled with the app version and Platform API version it describes.
+The app's documentation is the shared Hub help center, in the specs repo, not here:
+
+- **Writing docs:** edit `help/` in [substratalapps-applications-specs](https://github.com/CompositeCode/substratalapps-applications-specs) (guides, tutorials, developer pages, FAQ, optional per-screen notes). See its `help/README.md`. Per-screen pages, the versioned API reference and What's new are generated there on every build.
+- **When this app changes:** `docs-dispatch.yml` sends `app-docs-updated` to the specs repo on every merge to `main`, which rebuilds and republishes the help center. It needs the `SPECS_DOCS_TOKEN` secret; without it, the help center rebuilds daily.
+- **When the API changes:** the help center rebuilds its API reference from the live `openapi.yaml` daily and on `api-contract-updated`. This repo's `upstream-sync.yml` opens a PR that updates the app's generated client.
+- **Links can't break:** CI builds the help center and runs `scripts/help-check.rb`, so a screen without a help page, or a Help menu item pointing nowhere, fails the build.
 
 Update `CHANGELOG.md` under **Unreleased** with every change people will notice.
 

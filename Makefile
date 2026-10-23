@@ -30,15 +30,12 @@ sync-api: ## Vendor the latest openapi.yaml from the API repo's main
 sync-screens: ## Re-import the screen catalog from ../substratalapps-applications-specs
 	ruby scripts/import-screens.rb
 
-help-build: ## Build the Help Center locally and check its links
-	ruby scripts/help-generate.rb
-	cd help && bundle install --quiet && bundle exec jekyll build
-	ruby scripts/help-check.rb help/_site
+SPECS ?= ../substratalapps-applications-specs
 
-help-serve: ## Serve the Help Center at http://localhost:4000/substratalapps-macos/
-	ruby scripts/help-generate.rb
-	cd help && bundle install --quiet && bundle exec jekyll serve --livereload
+help-check: ## Check the app's Help links against a fresh build of the Hub help center in SPECS
+	cd $(SPECS) && npm ci --silent && npm run build
+	ruby scripts/help-check.rb $(SPECS)/_site/help
 
-check: test build help-build ## Everything CI runs
+check: test build help-check ## Everything CI runs
 
-.PHONY: help project build run test ui-test sync-api sync-screens help-build help-serve check
+.PHONY: help project build run test ui-test sync-api sync-screens help-check check
