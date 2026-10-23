@@ -51,8 +51,9 @@ In this app: the base URL is the host root (`APIEnvironment.baseURL`). `APIVersi
 
 | Item | Status | Detail |
 |---|---|---|
-| This repo's GitHub remote | ❌ **needs you** | `CompositeCode/substratalapps-macos` doesn't exist and the local repo has no remote or commits. Creating it and pushing is the one step left before CI and the Help Center go live. |
-| GitHub Pages for the Help Center | ❌ | Enable after the first push: Settings → Pages → Source: **GitHub Actions**. The site publishes at `https://compositecode.github.io/substratalapps-macos/`, the address the app's Help menu uses (`SubstratalHelpBaseURL` in `project.yml`). |
+| This repo's GitHub remote | ✅ | [`CompositeCode/substratalapps-macos`](https://github.com/CompositeCode/substratalapps-macos), **private**, created 2026-10-23; `main` pushed. |
+| GitHub Actions | ❌ **billing** | The first runs (2026-10-23) weren't started: "recent account payments have failed or your spending limit needs to be increased". Fix under the CompositeCode org's **Settings → Billing & plans**. Until then CI doesn't run; run `make check` locally. macOS runners use the most minutes, so set a spending limit that covers them. |
+| GitHub Pages for the Help Center | ❌ **plan** | GitHub refuses Pages on this private repo with the org's current plan (`422`). Either make the repo public (like `substratalapps.com`), or move to a plan with private Pages. Then set **Settings → Pages → Source: GitHub Actions** and run the Help Center workflow. The app's Help menu already points at `https://compositecode.github.io/substratalapps-macos/` (`SubstratalHelpBaseURL` in `project.yml`); if the site ends up somewhere else, change it there. |
 | API repo `openapi.yaml` (raw, `main`) | ✅ | `200`. `scripts/sync-openapi.sh` vendors it; a scheduled workflow keeps it current. |
 | Specs repo | ✅ | Up to date (`cebf679`, targets API v1.8.0). `scripts/import-screens.rb` imports its 75 macOS screens. |
 
