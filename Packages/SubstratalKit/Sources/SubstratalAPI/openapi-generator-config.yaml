@@ -1,0 +1,7 @@
+# swift-openapi-generator: builds the typed client from openapi.yaml at compile time.
+# openapi.yaml is vendored by scripts/sync-openapi.sh — never edit it here.
+generate:
+  - types
+  - client
+accessModifier: public
+namingStrategy: idiomatic

@@ -1,0 +1,90 @@
+# Keeps the app and the Help Center in step with their two upstreams:
+#   - the Platform API's openapi.yaml (CompositeCode/substratalapps.com, main = production)
+#   - the macOS screen inventory (CompositeCode/substratalapps-applications-specs)
+#
+# When either changed, it opens (or updates) one pull request with the new
+# vendored spec and screen catalog. CI then has to build the app's generated
+# client against the new spec and rebuild the Help Center before it can merge,
+# and merging publishes the new docs through help.yml. Nothing reaches main
+# unreviewed.
+#
+# Triggers: daily, by hand, or immediately from the upstream repos with a
+# repository_dispatch, for example as a last step of the API's deploy.yml:
+#   gh api repos/CompositeCode/substratalapps-macos/dispatches -f event_type=api-spec-updated
+name: Upstream sync
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [api-spec-updated, ui-spec-updated]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: upstream-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # A pull request opened with the default GITHUB_TOKEN doesn't trigger
+          # CI. Add a fine-grained token (contents + pull requests) as SYNC_TOKEN
+          # so the sync PR is checked like any other.
+          token: ${{ secrets.SYNC_TOKEN || github.token }}
+
+      - uses: actions/checkout@v7
+        with:
+          repository: CompositeCode/substratalapps-applications-specs
+          path: _specs
+
+      - name: Pull the API spec and the screen catalog
+        id: sync
+        run: |
+          api=$(scripts/sync-openapi.sh)
+          ruby scripts/import-screens.rb _specs
+          echo "api=$api" >> "$GITHUB_OUTPUT"
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat
+          fi
+
+      - name: Open or update the pull request
+        if: steps.sync.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_TOKEN || github.token }}
+          API: ${{ steps.sync.outputs.api }}
+        run: |
+          branch=automation/upstream-sync
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git add -A
+          git commit -m "Sync Platform API spec and screen catalog (${API#* })"
+          git push --force origin "$branch"
+          body=$(cat <<EOF
+          Automated sync from upstream.
+
+          - Platform API \`openapi.yaml\`: **${API}** (from \`CompositeCode/substratalapps.com@main\`)
+          - Screen catalog: re-imported from \`CompositeCode/substratalapps-applications-specs\`
+
+          CI rebuilds the generated client against the new spec and rebuilds the Help Center. Before merging:
+          - Breaking changes ship as a new \`Substratal-Version\`. If \`components.parameters.ApiVersion\` gained a value, moving to it is a deliberate code change (\`APIVersion.current\`), not part of this PR.
+          - Add a line under **Unreleased** in \`CHANGELOG.md\` if people will notice.
+
+          Merging publishes a new Help Center version.
+          EOF
+          )
+          if gh pr view "$branch" >/dev/null 2>&1; then
+            gh pr edit "$branch" --body "$body"
+          else
+            gh pr create --head "$branch" --base main --title "Sync Platform API spec and screen catalog" --body "$body"
+          fi

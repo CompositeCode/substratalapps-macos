@@ -1,0 +1,875 @@
+{
+  "_generated": "by scripts/import-screens.rb from substratalapps-applications-specs/macos/SCREENS.md; edit the spec, then re-run",
+  "spec": "Substratal Apps Platform API v1.8.0 (openapi 1.0.0-draft.9; send `Substratal-Version: 1` on every request, no `/v1` in paths) — https://compositecode.github.io/substratalapps.com/",
+  "screens": [
+    {
+      "id": "AUTH-01",
+      "title": "Sign in",
+      "domain": "D1 Sign-in & Identity",
+      "route": "/sign-in",
+      "archetype": "auth",
+      "phase": "MVP",
+      "audience": "Unauthenticated",
+      "purpose": "Exchange email + password for a session, or start an MFA challenge."
+    },
+    {
+      "id": "AUTH-02",
+      "title": "Two-factor challenge",
+      "domain": "D1 Sign-in & Identity",
+      "route": "/sign-in/mfa",
+      "archetype": "auth",
+      "phase": "MVP",
+      "audience": "Holder of mfa_token",
+      "purpose": "Complete sign-in with a TOTP code or a recovery code."
+    },
+    {
+      "id": "AUTH-03",
+      "title": "Create account",
+      "domain": "D1 Sign-in & Identity",
+      "route": "/sign-up",
+      "archetype": "auth",
+      "phase": "MVP",
+      "audience": "Unauthenticated",
+      "purpose": "Self-service signup with email and password."
+    },
+    {
+      "id": "AUTH-04",
+      "title": "Verify your email",
+      "domain": "D1 Sign-in & Identity",
+      "route": "/verify-email",
+      "archetype": "auth",
+      "phase": "MVP",
+      "audience": "Signed in (unverified) or token holder",
+      "purpose": "Tell the user to check email; complete verification from the emailed link."
+    },
+    {
+      "id": "AUTH-05",
+      "title": "Forgot password",
+      "domain": "D1 Sign-in & Identity",
+      "route": "/forgot-password",
+      "archetype": "auth",
+      "phase": "MVP",
+      "audience": "Unauthenticated",
+      "purpose": "Request a password-reset email."
+    },
+    {
+      "id": "AUTH-06",
+      "title": "Set a new password",
+      "domain": "D1 Sign-in & Identity",
+      "route": "/reset-password",
+      "archetype": "auth",
+      "phase": "MVP",
+      "audience": "Reset-token holder",
+      "purpose": "Choose a new password from the emailed reset link."
+    },
+    {
+      "id": "AUTH-07",
+      "title": "Accept invitation",
+      "domain": "D1 Sign-in & Identity",
+      "route": "/invite",
+      "archetype": "auth",
+      "phase": "MVP",
+      "audience": "Invitation-token holder",
+      "purpose": "Activate an account an admin created: set password and sign in."
+    },
+    {
+      "id": "ACC-01",
+      "title": "Account & profile",
+      "domain": "D2 Account & Security",
+      "route": "/account",
+      "archetype": "settings",
+      "phase": "MVP",
+      "audience": "Self",
+      "purpose": "View and edit the signed-in user's global profile.",
+      "sidebar": {
+        "section": "personal",
+        "label": "Account",
+        "symbol": "person.crop.circle",
+        "shortcut": "cmd+4",
+        "visible_when": "always",
+        "order": 3
+      }
+    },
+    {
+      "id": "ACC-02",
+      "title": "Change email",
+      "domain": "D2 Account & Security",
+      "route": "/account/email",
+      "archetype": "form",
+      "phase": "MVP",
+      "audience": "Self",
+      "purpose": "Start an email change; the new address must be verified."
+    },
+    {
+      "id": "ACC-03",
+      "title": "Change password",
+      "domain": "D2 Account & Security",
+      "route": "/account/security/password",
+      "archetype": "form",
+      "phase": "MVP",
+      "audience": "Self",
+      "purpose": "Change password knowing the current one."
+    },
+    {
+      "id": "ACC-04",
+      "title": "Security",
+      "domain": "D2 Account & Security",
+      "route": "/account/security",
+      "archetype": "settings",
+      "phase": "MVP",
+      "audience": "Self",
+      "purpose": "Password, two-factor and active sessions in one place."
+    },
+    {
+      "id": "ACC-05",
+      "title": "Turn on two-factor",
+      "domain": "D2 Account & Security",
+      "route": "/account/security/2fa/enable",
+      "archetype": "wizard",
+      "phase": "MVP",
+      "audience": "Self",
+      "purpose": "Enroll an authenticator app (TOTP) and save recovery codes."
+    },
+    {
+      "id": "ACC-06",
+      "title": "Turn off two-factor",
+      "domain": "D2 Account & Security",
+      "route": "/account/security/2fa/disable",
+      "archetype": "confirm",
+      "phase": "MVP",
+      "audience": "Self",
+      "purpose": "Disable TOTP with a current code or a recovery code."
+    },
+    {
+      "id": "ACC-07",
+      "title": "Privacy",
+      "domain": "D2 Account & Security",
+      "route": "/account/privacy",
+      "archetype": "settings",
+      "phase": "MVP",
+      "audience": "Self",
+      "purpose": "Export personal data and delete the account."
+    },
+    {
+      "id": "ACC-08",
+      "title": "Delete account",
+      "domain": "D2 Account & Security",
+      "route": "/account/privacy/delete",
+      "archetype": "confirm",
+      "phase": "MVP",
+      "audience": "Self",
+      "purpose": "Request erasure: deactivate now, erase after 7 days."
+    },
+    {
+      "id": "APP-01",
+      "title": "Home — My Apps",
+      "domain": "D3 My Apps",
+      "route": "/",
+      "archetype": "grid",
+      "phase": "MVP",
+      "audience": "Signed in",
+      "purpose": "See every app you can use, its access status, and launch it.",
+      "sidebar": {
+        "section": "personal",
+        "label": "Home",
+        "symbol": "square.grid.2x2",
+        "shortcut": "cmd+1",
+        "visible_when": "always",
+        "order": 0
+      }
+    },
+    {
+      "id": "APP-02",
+      "title": "App info",
+      "domain": "D3 My Apps",
+      "route": "/apps/:appId",
+      "archetype": "popover",
+      "phase": "MVP",
+      "audience": "Signed in",
+      "purpose": "Explain an app's access status and how the user has access."
+    },
+    {
+      "id": "APP-03",
+      "title": "Launch app",
+      "domain": "D3 My Apps",
+      "route": "/apps/:appId/launch",
+      "archetype": "handoff",
+      "phase": "MVP",
+      "audience": "Active entitlement",
+      "purpose": "Mint an app token (or authorization code) and open the app."
+    },
+    {
+      "id": "APP-04",
+      "title": "App profile",
+      "domain": "D3 My Apps",
+      "route": "/apps/:appId/profile",
+      "archetype": "form",
+      "phase": "Phase 2",
+      "audience": "Self, active entitlement",
+      "purpose": "Per-app display handle and custom profile fields."
+    },
+    {
+      "id": "APP-05",
+      "title": "Past apps",
+      "domain": "D3 My Apps",
+      "route": "/apps/past",
+      "archetype": "list",
+      "phase": "MVP",
+      "audience": "Signed in",
+      "purpose": "Apps whose access was revoked or expired."
+    },
+    {
+      "id": "SET-01",
+      "title": "Settings — Global",
+      "domain": "D4 Settings",
+      "route": "/settings",
+      "archetype": "settings",
+      "phase": "MVP",
+      "audience": "Self",
+      "purpose": "Preferences that apply to every app.",
+      "sidebar": {
+        "section": "personal",
+        "label": "Settings",
+        "symbol": "gearshape",
+        "shortcut": "cmd+6",
+        "visible_when": "always",
+        "order": 5
+      }
+    },
+    {
+      "id": "SET-02",
+      "title": "Settings — Per app",
+      "domain": "D4 Settings",
+      "route": "/settings/apps/:appId",
+      "archetype": "settings",
+      "phase": "Phase 2",
+      "audience": "Self, active entitlement",
+      "purpose": "Override global settings and set app-specific preferences from the app's settings_schema."
+    },
+    {
+      "id": "ORG-01",
+      "title": "Organizations",
+      "domain": "D5 Organizations",
+      "route": "/orgs",
+      "archetype": "list",
+      "phase": "MVP",
+      "audience": "Signed in (all orgs with organizations.manage)",
+      "purpose": "Organizations you belong to, plus pending invitations.",
+      "sidebar": {
+        "section": "personal",
+        "label": "Organizations",
+        "symbol": "person.3",
+        "shortcut": "cmd+3",
+        "visible_when": "flag:organizations",
+        "order": 2
+      }
+    },
+    {
+      "id": "ORG-02",
+      "title": "New organization",
+      "domain": "D5 Organizations",
+      "route": "/orgs/new",
+      "archetype": "form",
+      "phase": "MVP",
+      "audience": "Any active user",
+      "purpose": "Create an organization; creator becomes org admin."
+    },
+    {
+      "id": "ORG-03",
+      "title": "Organization — Members",
+      "domain": "D5 Organizations",
+      "route": "/orgs/:orgId/members",
+      "archetype": "detail",
+      "phase": "MVP",
+      "audience": "Member (read), org_admin / organizations.manage (write)",
+      "purpose": "See and manage members and pending invitations."
+    },
+    {
+      "id": "ORG-04",
+      "title": "Invite member",
+      "domain": "D5 Organizations",
+      "route": "/orgs/:orgId/members/invite",
+      "archetype": "form",
+      "phase": "MVP",
+      "audience": "org_admin; organizations.manage may add by user_id",
+      "purpose": "Invite people by email (or add an existing user, staff only)."
+    },
+    {
+      "id": "ORG-05",
+      "title": "Member actions",
+      "domain": "D5 Organizations",
+      "route": "/orgs/:orgId/members/:userId",
+      "archetype": "confirm",
+      "phase": "MVP",
+      "audience": "org_admin / organizations.manage",
+      "purpose": "Change a member's role or remove them."
+    },
+    {
+      "id": "ORG-06",
+      "title": "Organization — Apps & seats",
+      "domain": "D5 Organizations",
+      "route": "/orgs/:orgId/apps",
+      "archetype": "tab",
+      "phase": "Phase 2",
+      "audience": "Member (read), org_admin (write)",
+      "purpose": "Org-wide app grants and who they include."
+    },
+    {
+      "id": "ORG-07",
+      "title": "Grant app to organization / member scope",
+      "domain": "D5 Organizations",
+      "route": "/orgs/:orgId/apps/grant",
+      "archetype": "form",
+      "phase": "Phase 2",
+      "audience": "entitlements.manage or app owner; scope edits by org_admin",
+      "purpose": "Create an org-wide grant or change who it includes."
+    },
+    {
+      "id": "ORG-08",
+      "title": "Organization — Settings",
+      "domain": "D5 Organizations",
+      "route": "/orgs/:orgId/settings",
+      "archetype": "settings",
+      "phase": "MVP",
+      "audience": "org_admin (rename, SCIM), organizations.manage (suspend, SCIM), any member (leave)",
+      "purpose": "Rename, leave, set up SCIM provisioning, or (staff) suspend the organization."
+    },
+    {
+      "id": "ORG-09",
+      "title": "Invitation",
+      "domain": "D5 Organizations",
+      "route": "/orgs/:orgId/invitation",
+      "archetype": "confirm",
+      "phase": "MVP",
+      "audience": "Invited user",
+      "purpose": "Accept or decline an organization invitation."
+    },
+    {
+      "id": "USR-01",
+      "title": "Users",
+      "domain": "D6 Users",
+      "route": "/admin/users",
+      "archetype": "table",
+      "phase": "MVP",
+      "audience": "users.list (write actions need users.manage)",
+      "purpose": "Find and manage user accounts.",
+      "sidebar": {
+        "section": "administration",
+        "label": "Users",
+        "symbol": "person.2",
+        "shortcut": "opt+cmd+1",
+        "visible_when": "perm:users.list",
+        "order": 6
+      }
+    },
+    {
+      "id": "USR-02",
+      "title": "Invite user",
+      "domain": "D6 Users",
+      "route": "/admin/users/new",
+      "archetype": "form",
+      "phase": "MVP",
+      "audience": "users.manage",
+      "purpose": "Create a user and send an invitation (or create active)."
+    },
+    {
+      "id": "USR-03",
+      "title": "User — Overview",
+      "domain": "D6 Users",
+      "route": "/admin/users/:userId",
+      "archetype": "detail",
+      "phase": "MVP",
+      "audience": "users.list (read), users.manage (write)",
+      "purpose": "One user's account state and administrative actions."
+    },
+    {
+      "id": "USR-04",
+      "title": "User — Sessions",
+      "domain": "D6 Users",
+      "route": "/admin/users/:userId/sessions",
+      "archetype": "tab",
+      "phase": "MVP",
+      "audience": "users.manage",
+      "purpose": "See and revoke a user's sessions."
+    },
+    {
+      "id": "USR-05",
+      "title": "Suspend user",
+      "domain": "D6 Users",
+      "route": "/admin/users/:userId/suspend",
+      "archetype": "confirm",
+      "phase": "MVP",
+      "audience": "users.manage",
+      "purpose": "Suspend an account (signs them out everywhere)."
+    },
+    {
+      "id": "ACX-01",
+      "title": "User — Access",
+      "domain": "D7 Access",
+      "route": "/admin/users/:userId/access",
+      "archetype": "tab",
+      "phase": "MVP",
+      "audience": "users.list (read), entitlements.manage or app owner (write)",
+      "purpose": "Turn apps on or off for one person; see every path that grants access."
+    },
+    {
+      "id": "ACX-02",
+      "title": "Grant access",
+      "domain": "D7 Access",
+      "route": "/admin/users/:userId/access/grant",
+      "archetype": "form",
+      "phase": "MVP",
+      "audience": "entitlements.manage or app owner (own app)",
+      "purpose": "Give a person access to an app."
+    },
+    {
+      "id": "ACX-03",
+      "title": "Turn off / edit access",
+      "domain": "D7 Access",
+      "route": "/admin/entitlements/:entId",
+      "archetype": "confirm",
+      "phase": "MVP",
+      "audience": "entitlements.manage or app owner",
+      "purpose": "Confirm turning off access, or edit term/source."
+    },
+    {
+      "id": "ACX-04",
+      "title": "Access check (Why?)",
+      "domain": "D7 Access",
+      "route": "/admin/users/:userId/apps/:appId/why",
+      "archetype": "popover",
+      "phase": "MVP",
+      "audience": "users.list or app owner",
+      "purpose": "Explain exactly why a person can or can't use an app."
+    },
+    {
+      "id": "ACX-05",
+      "title": "Access (all)",
+      "domain": "D7 Access",
+      "route": "/admin/access",
+      "archetype": "table",
+      "phase": "MVP",
+      "audience": "entitlements.manage or app owner (confined to own apps)",
+      "purpose": "Every grant across users: audit expirations, trials, revocations.",
+      "sidebar": {
+        "section": "administration",
+        "label": "Access",
+        "symbol": "switch.2",
+        "shortcut": "opt+cmd+2",
+        "visible_when": "access",
+        "order": 7
+      }
+    },
+    {
+      "id": "ROL-01",
+      "title": "Roles",
+      "domain": "D8 Roles & Permissions",
+      "route": "/admin/roles",
+      "archetype": "list",
+      "phase": "MVP",
+      "audience": "users.list (read), roles.manage (write)",
+      "purpose": "Platform and app roles.",
+      "sidebar": {
+        "section": "administration",
+        "label": "Roles",
+        "symbol": "checkmark.shield",
+        "shortcut": "opt+cmd+3",
+        "visible_when": "perm:users.list",
+        "order": 8
+      }
+    },
+    {
+      "id": "ROL-02",
+      "title": "Role detail",
+      "domain": "D8 Roles & Permissions",
+      "route": "/admin/roles/:roleId",
+      "archetype": "detail",
+      "phase": "MVP",
+      "audience": "users.list (read), roles.manage (write)",
+      "purpose": "View or edit a role's permissions."
+    },
+    {
+      "id": "ROL-03",
+      "title": "New role",
+      "domain": "D8 Roles & Permissions",
+      "route": "/admin/roles/new",
+      "archetype": "form",
+      "phase": "MVP",
+      "audience": "roles.manage",
+      "purpose": "Define a custom role."
+    },
+    {
+      "id": "ROL-04",
+      "title": "User — Roles",
+      "domain": "D8 Roles & Permissions",
+      "route": "/admin/users/:userId/roles",
+      "archetype": "tab",
+      "phase": "MVP",
+      "audience": "users.list (read), roles.manage (write)",
+      "purpose": "Assign and remove roles for a user."
+    },
+    {
+      "id": "APL-01",
+      "title": "Applications",
+      "domain": "D9 Applications",
+      "route": "/dev/apps",
+      "archetype": "list",
+      "phase": "MVP",
+      "audience": "Any (catalog), owner/applications.manage (manage)",
+      "purpose": "Applications you own or administer.",
+      "sidebar": {
+        "section": "developer",
+        "label": "Applications",
+        "symbol": "shippingbox",
+        "shortcut": "ctrl+cmd+1",
+        "visible_when": "developer",
+        "order": 11
+      }
+    },
+    {
+      "id": "APL-02",
+      "title": "Register application",
+      "domain": "D9 Applications",
+      "route": "/dev/apps/new",
+      "archetype": "wizard",
+      "phase": "MVP",
+      "audience": "applications.manage, or anyone with a verified email (self-service)",
+      "purpose": "Register a new application."
+    },
+    {
+      "id": "APL-03",
+      "title": "Application — Overview",
+      "domain": "D9 Applications",
+      "route": "/dev/apps/:appId",
+      "archetype": "detail",
+      "phase": "MVP",
+      "audience": "Owner (configure), applications.manage (anything)",
+      "purpose": "Configure an application."
+    },
+    {
+      "id": "APL-04",
+      "title": "Settings schema",
+      "domain": "D9 Applications",
+      "route": "/dev/apps/:appId/schema",
+      "archetype": "tab",
+      "phase": "Phase 2",
+      "audience": "Owner / applications.manage",
+      "purpose": "Declare per-user settings the app stores in Substratal."
+    },
+    {
+      "id": "APL-05",
+      "title": "Permissions & roles",
+      "domain": "D9 Applications",
+      "route": "/dev/apps/:appId/roles",
+      "archetype": "tab",
+      "phase": "Phase 2",
+      "audience": "Owner / applications.manage",
+      "purpose": "Declare app permissions, available app roles and the default role."
+    },
+    {
+      "id": "APL-06",
+      "title": "Review",
+      "domain": "D9 Applications",
+      "route": "/dev/apps/:appId/review",
+      "archetype": "form",
+      "phase": "Phase 3",
+      "audience": "applications.manage",
+      "purpose": "Staff moderation of an application."
+    },
+    {
+      "id": "APL-07",
+      "title": "Push credentials",
+      "domain": "D9 Applications",
+      "route": "/dev/apps/:appId/push",
+      "archetype": "tab",
+      "phase": "Phase 2",
+      "audience": "Owner or applications.manage with a User token (write); app key / owner (read)",
+      "purpose": "Configure APNs, FCM and Web Push for an Application so it can send push notifications."
+    },
+    {
+      "id": "KEY-01",
+      "title": "API keys",
+      "domain": "D10 Developer Credentials",
+      "route": "/dev/keys",
+      "archetype": "table",
+      "phase": "MVP",
+      "audience": "api_keys.manage or app owner",
+      "purpose": "Service and agent credentials.",
+      "sidebar": {
+        "section": "developer",
+        "label": "API Keys",
+        "symbol": "key",
+        "shortcut": "ctrl+cmd+2",
+        "visible_when": "developer",
+        "order": 12
+      }
+    },
+    {
+      "id": "KEY-02",
+      "title": "Create API key",
+      "domain": "D10 Developer Credentials",
+      "route": "/dev/keys/new",
+      "archetype": "form",
+      "phase": "MVP",
+      "audience": "api_keys.manage or app owner (app-scoped)",
+      "purpose": "Create a key with least-privilege permissions."
+    },
+    {
+      "id": "KEY-03",
+      "title": "Secret reveal",
+      "domain": "D10 Developer Credentials",
+      "route": "(modal)",
+      "archetype": "secret",
+      "phase": "MVP",
+      "audience": "Creator",
+      "purpose": "Show a new API key secret, webhook signing secret, or recovery codes exactly once."
+    },
+    {
+      "id": "KEY-04",
+      "title": "API key detail",
+      "domain": "D10 Developer Credentials",
+      "route": "/dev/keys/:keyId",
+      "archetype": "detail",
+      "phase": "MVP",
+      "audience": "api_keys.manage or app owner",
+      "purpose": "Edit, rotate or revoke a key."
+    },
+    {
+      "id": "WHK-01",
+      "title": "Webhooks",
+      "domain": "D10 Developer Credentials",
+      "route": "/dev/webhooks",
+      "archetype": "list",
+      "phase": "Phase 2",
+      "audience": "webhooks.manage or app owner",
+      "purpose": "Endpoints that receive access-change events.",
+      "sidebar": {
+        "section": "developer",
+        "label": "Webhooks",
+        "symbol": "arrow.triangle.branch",
+        "shortcut": "ctrl+cmd+3",
+        "visible_when": "developer",
+        "order": 13
+      }
+    },
+    {
+      "id": "WHK-02",
+      "title": "Add / edit webhook",
+      "domain": "D10 Developer Credentials",
+      "route": "/dev/webhooks/new",
+      "archetype": "form",
+      "phase": "Phase 2",
+      "audience": "webhooks.manage or app owner",
+      "purpose": "Subscribe a URL to events."
+    },
+    {
+      "id": "WHK-03",
+      "title": "Webhook — Deliveries",
+      "domain": "D10 Developer Credentials",
+      "route": "/dev/webhooks/:hookId",
+      "archetype": "detail",
+      "phase": "Phase 2",
+      "audience": "webhooks.manage or app owner",
+      "purpose": "Delivery history, testing and secret rotation."
+    },
+    {
+      "id": "WHK-04",
+      "title": "Delivery detail",
+      "domain": "D10 Developer Credentials",
+      "route": "/dev/webhooks/:hookId/deliveries/:deliveryId",
+      "archetype": "popover",
+      "phase": "Phase 2",
+      "audience": "webhooks.manage or app owner",
+      "purpose": "One delivery attempt in detail."
+    },
+    {
+      "id": "BIL-01",
+      "title": "My plan",
+      "domain": "D11 Plan & Billing",
+      "route": "/billing",
+      "archetype": "settings",
+      "phase": "Phase 2",
+      "audience": "Self; billing.manage can view any User's (read-only)",
+      "purpose": "Free or Standard: what covers you, your own subscription, upgrade and manage billing.",
+      "sidebar": {
+        "section": "personal",
+        "label": "Plan & Billing",
+        "symbol": "creditcard",
+        "shortcut": "cmd+5",
+        "visible_when": "flag:billing",
+        "order": 4
+      }
+    },
+    {
+      "id": "BIL-02",
+      "title": "Organization subscription",
+      "domain": "D11 Plan & Billing",
+      "route": "/orgs/:orgId/subscription",
+      "archetype": "tab",
+      "phase": "Phase 2",
+      "audience": "org_admin (manage); billing.manage (read + portal)",
+      "purpose": "An organization's Standard subscription and which members it covers."
+    },
+    {
+      "id": "BIL-03",
+      "title": "Checkout / billing portal",
+      "domain": "D11 Plan & Billing",
+      "route": "/billing/return",
+      "archetype": "handoff",
+      "phase": "Phase 2",
+      "audience": "Self (individual); org_admin (org checkout); org_admin or billing.manage (org portal)",
+      "purpose": "Hand off to Stripe in the browser and confirm the result on return."
+    },
+    {
+      "id": "BIL-04",
+      "title": "Tenant & infrastructure",
+      "domain": "D11 Plan & Billing",
+      "route": "/dev/tenant",
+      "archetype": "detail",
+      "phase": "Phase 2",
+      "audience": "Tenant owner (read), tenants.manage (write)",
+      "purpose": "Where an Application owner's data lives, and support-run tier changes. Tenants aren't billed.",
+      "sidebar": {
+        "section": "developer",
+        "label": "Tenant",
+        "symbol": "server.rack",
+        "shortcut": "ctrl+cmd+4",
+        "visible_when": "tenant",
+        "order": 14
+      }
+    },
+    {
+      "id": "AUD-01",
+      "title": "Audit log",
+      "domain": "D12 Audit Log",
+      "route": "/admin/audit",
+      "archetype": "table",
+      "phase": "MVP",
+      "audience": "audit.view",
+      "purpose": "Who changed what, when.",
+      "sidebar": {
+        "section": "administration",
+        "label": "Audit Log",
+        "symbol": "list.bullet.clipboard",
+        "shortcut": "opt+cmd+4",
+        "visible_when": "perm:audit.view",
+        "order": 9
+      }
+    },
+    {
+      "id": "AUD-02",
+      "title": "Audit event",
+      "domain": "D12 Audit Log",
+      "route": "/admin/audit/:eventId",
+      "archetype": "popover",
+      "phase": "MVP",
+      "audience": "audit.view",
+      "purpose": "One event with before/after diff."
+    },
+    {
+      "id": "NTF-01",
+      "title": "Inbox",
+      "domain": "D13 Notifications",
+      "route": "/inbox",
+      "archetype": "list",
+      "phase": "Phase 2",
+      "audience": "Self",
+      "purpose": "Every notification the person has received — from every app and from Substratal — with read and archived state.",
+      "sidebar": {
+        "section": "personal",
+        "label": "Inbox",
+        "symbol": "tray",
+        "shortcut": "cmd+2",
+        "visible_when": "flag:notifications",
+        "order": 1
+      }
+    },
+    {
+      "id": "NTF-02",
+      "title": "Notification",
+      "domain": "D13 Notifications",
+      "route": "/inbox/:notificationId",
+      "archetype": "popover",
+      "phase": "Phase 2",
+      "audience": "Self (users.list via NTF-05)",
+      "purpose": "One notification in full, with where it leads and how its push went."
+    },
+    {
+      "id": "NTF-03",
+      "title": "Devices & notifications",
+      "domain": "D13 Notifications",
+      "route": "/account/devices",
+      "archetype": "settings",
+      "phase": "Phase 2",
+      "audience": "Self",
+      "purpose": "Where push notifications reach this person, and controls for this device."
+    },
+    {
+      "id": "NTF-04",
+      "title": "Turn on notifications",
+      "domain": "D13 Notifications",
+      "route": "/account/devices/enable",
+      "archetype": "wizard",
+      "phase": "Phase 2",
+      "audience": "Self",
+      "purpose": "Explain, request the OS permission, and register this install for push."
+    },
+    {
+      "id": "NTF-05",
+      "title": "User — Notifications & devices",
+      "domain": "D13 Notifications",
+      "route": "/admin/users/:userId/notifications",
+      "archetype": "tab",
+      "phase": "Phase 2",
+      "audience": "users.list (read), users.manage (delete devices)",
+      "purpose": "Support view of a person's inbox and push devices for investigations."
+    },
+    {
+      "id": "NTF-06",
+      "title": "Send notification",
+      "domain": "D13 Notifications",
+      "route": "/admin/notifications/new",
+      "archetype": "form",
+      "phase": "Phase 2",
+      "audience": "platform notifications.send",
+      "purpose": "Staff tool: send one notification to one person on behalf of an Application.",
+      "sidebar": {
+        "section": "administration",
+        "label": "Send notification",
+        "symbol": "bell.badge",
+        "visible_when": "perm:notifications.send",
+        "order": 10
+      }
+    },
+    {
+      "id": "GLB-01",
+      "title": "Command palette",
+      "domain": "G Global / Shell",
+      "route": "(overlay)",
+      "archetype": "overlay",
+      "phase": "MVP",
+      "audience": "Signed in",
+      "purpose": "Jump anywhere and run any action by typing."
+    },
+    {
+      "id": "GLB-02",
+      "title": "Manage hub",
+      "domain": "G Global / Shell",
+      "route": "/manage",
+      "archetype": "hub",
+      "phase": "MVP",
+      "audience": "Any admin or developer permission",
+      "purpose": "Compact-layout landing list for the Administration and Developer sections."
+    },
+    {
+      "id": "GLB-03",
+      "title": "System states",
+      "domain": "G Global / Shell",
+      "route": "(global)",
+      "archetype": "overlay",
+      "phase": "MVP",
+      "audience": "—",
+      "purpose": "App-wide banners and blocking states."
+    }
+  ]
+}

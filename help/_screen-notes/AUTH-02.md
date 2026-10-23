@@ -1,0 +1,3 @@
+- Enter the 6-digit code from your authenticator app and choose **Verify**.
+- **Use a recovery code** switches to one of the single-use codes you saved when you turned two-factor on. Each works once.
+- **Back** returns to the sign-in form. The challenge expires after 5 minutes; after that, sign in again.

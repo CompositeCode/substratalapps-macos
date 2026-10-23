@@ -1,0 +1,76 @@
+# XcodeGen project definition. The .xcodeproj is generated, not committed:
+#   xcodegen generate        (or: make project)
+# Edit this file, not the project, so changes stay reviewable.
+name: SubstratalHub
+options:
+  bundleIdPrefix: com.substratalapps
+  deploymentTarget:
+    macOS: "15.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+  xcodeVersion: "26.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: BJA9558E4B
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_HARDENED_RUNTIME: YES
+    DEAD_CODE_STRIPPING: YES
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+
+packages:
+  SubstratalKit:
+    path: Packages/SubstratalKit
+
+targets:
+  SubstratalHub:
+    type: application
+    platform: macOS
+    sources:
+      - path: App
+    dependencies:
+      - package: SubstratalKit
+    settings:
+      base:
+        PRODUCT_NAME: Substratal Hub
+        # Shared with the iOS app (Universal Purchase) so one APNs topic reaches both
+        # (CLIENT-ARCHITECTURE §2). Confirm before the first TestFlight/notarized build.
+        PRODUCT_BUNDLE_IDENTIFIER: com.substratalapps.hub
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        CODE_SIGN_ENTITLEMENTS: App/Resources/SubstratalHub.entitlements
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.developer-tools
+        INFOPLIST_KEY_NSHumanReadableCopyright: "© 2026 Adron Hall / Composite Code. MIT License."
+        GENERATE_INFOPLIST_FILE: YES
+    info:
+      path: App/Resources/Info.plist
+      properties:
+        CFBundleDisplayName: Substratal Hub
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
+        # Help Center root (help/ in this repo, on GitHub Pages).
+        SubstratalHelpBaseURL: https://compositecode.github.io/substratalapps-macos/
+        CFBundleURLTypes:
+          - CFBundleURLName: com.substratalapps.hub.deeplink
+            CFBundleURLSchemes: [substratal]
+    scheme:
+      testTargets: [SubstratalHubUITests]
+      gatherCoverageData: true
+
+  SubstratalHubUITests:
+    type: bundle.ui-testing
+    platform: macOS
+    sources:
+      - path: AppUITests
+    dependencies:
+      - target: SubstratalHub
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.substratalapps.hub.uitests
+        TEST_TARGET_NAME: SubstratalHub
