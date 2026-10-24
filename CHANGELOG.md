@@ -14,6 +14,11 @@ Every release of Substratal Hub for macOS. The Hub help center's What's new page
 - Help menu: the Substratal Hub help center (shared by every Hub app), help for the current screen, the macOS guide, keyboard shortcuts, troubleshooting, FAQ, what's new, and the Platform API reference and versioning.
 - Update notices: a banner when this version of the app is deprecated by the API, and a stop with "Update required" when the API no longer supports it.
 
+### Build and release
+
+- `scripts/run-local.sh`: build and launch the app for testing, against the production API or a local devserver.
+- `scripts/build-pkg.sh` and the **Release** workflow: build the `.pkg` installer and publish it as a GitHub Release asset. Signed and notarized when the Developer ID secrets are configured; an unsigned pre-release otherwise.
+
 ### Platform API
 
 - Built against API spec `1.0.0-draft.9` (API v1.8.0), version header `Substratal-Version: 1`. Paths have no `/v1` prefix.
