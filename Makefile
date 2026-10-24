@@ -24,6 +24,9 @@ run-local: ## Build and launch for testing; API=… to choose the API (default p
 pkg: ## Build the installer into build/pkg (signs/notarizes when APP_IDENTITY etc. are set)
 	scripts/build-pkg.sh
 
+dist: ## Build a distributable .pkg on this Mac, signing/notarizing with what's in your Keychain
+	scripts/dist-local.sh --open
+
 test: ## SubstratalKit unit tests
 	cd Packages/SubstratalKit && swift test
 
@@ -44,4 +47,4 @@ help-check: ## Check the app's Help links against a fresh build of the Hub help 
 
 check: test build help-check ## Everything CI runs
 
-.PHONY: help project build run run-local pkg test ui-test sync-api sync-screens help-check check
+.PHONY: help project build run run-local pkg dist test ui-test sync-api sync-screens help-check check

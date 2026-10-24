@@ -17,6 +17,7 @@ Every release of Substratal Hub for macOS. The Hub help center's What's new page
 ### Build and release
 
 - `scripts/run-local.sh`: build and launch the app for testing, against the production API or a local devserver.
+- `scripts/dist-local.sh` (`make dist`): build a distributable `.pkg` on your Mac, signed and notarized with the Developer ID certificates and `notarytool` profile in your Keychain, with signature and Gatekeeper checks.
 - `scripts/build-pkg.sh` and the **Release** workflow: build the `.pkg` installer and publish it as a GitHub Release asset. Signed and notarized when the Developer ID secrets are configured; an unsigned pre-release otherwise.
 
 ### Platform API

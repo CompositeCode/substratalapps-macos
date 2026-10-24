@@ -82,6 +82,17 @@ or choose **Settings → Connection → Local devserver** in the app. Each envir
 
 ### Building the installer (.pkg)
 
+On your Mac, for distribution:
+
+```bash
+scripts/dist-local.sh          # or: make dist (also shows it in Finder)
+scripts/dist-local.sh 0.2.0    # a specific version
+```
+
+It finds the **Developer ID Application** and **Developer ID Installer** certificates in your Keychain and signs with them. With a `notarytool` profile (create it once: `xcrun notarytool store-credentials substratal-notary --team-id <TEAMID> --apple-id <you@example.com>`) it also notarizes and staples, so the `.pkg` opens on any Mac without warnings. Then it checks the signature and Gatekeeper and prints the path and SHA-256. Without certificates it builds an unsigned test package and says so.
+
+The underlying build, used by CI as well:
+
 ```bash
 scripts/build-pkg.sh                     # → build/pkg/SubstratalHub-<version>.pkg (+ .sha256)
 VERSION=0.2.0 BUILD_NUMBER=7 scripts/build-pkg.sh
