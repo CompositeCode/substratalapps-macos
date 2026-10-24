@@ -45,7 +45,9 @@ In this app: the base URL is the host root (`APIEnvironment.baseURL`). `APIVersi
 | Bundle ID `com.substratalapps.hub` | ⚠️ **decide** | Chosen here; nothing in the specs or the iOS repo fixes it yet. iOS must use the **same** ID (Universal Purchase), because `app_hub` has one APNs topic (CLIENT-ARCHITECTURE §2). Confirm, then register it as an App ID. |
 | Registered App ID + provisioning profile | ❌ | The data-protection Keychain (device-only refresh token), Push Notifications and Associated Domains. Until then, a local build stores the session in the login keychain instead (`KeychainStore` falls back on `errSecMissingEntitlement`). |
 | **Developer ID Application** certificate | ❌ | Notarized direct-download builds (the plan's distribution route). Only Apple Development is installed. |
-| Notarization credentials (App Store Connect API key) | ❌ | `notarytool` in CI. Store as GitHub secrets. |
+| **Developer ID Installer** certificate | ❌ | Signing the `.pkg` (`INSTALLER_IDENTITY` / `DEVELOPER_ID_INSTALLER_P12`). |
+| Notarization credentials (App Store Connect API key) | ❌ | `notarytool` in `release.yml`. Store as the secrets `NOTARY_KEY_P8`, `NOTARY_KEY_ID`, `NOTARY_ISSUER_ID`. |
+| `.pkg` build | ✅ | `scripts/build-pkg.sh` builds `SubstratalHub-<version>.pkg` (Release archive, installs to `/Applications`, macOS 15+), verified locally on 2026-10-23. `release.yml` publishes it as a GitHub Release asset on a `v*` tag: unsigned pre-release until the Developer ID secrets are set, then signed, notarized and stapled. |
 | Sparkle update feed host (`downloads.substratalapps.com`) | ❌ | Doesn't resolve. Can start as a GitHub Release asset plus an appcast on Pages. |
 
 ## Repositories and publishing

@@ -61,6 +61,7 @@ Requirements: Xcode 26 or later, macOS 15 or later, [XcodeGen](https://github.co
 ```bash
 make project     # generate SubstratalHub.xcodeproj
 make build       # or open SubstratalHub.xcodeproj and run the SubstratalHub scheme
+scripts/run-local.sh   # build and launch against the production API (or pass http://localhost:8080)
 make run         # build and launch against production
 make test        # SubstratalKit unit tests
 make help-check  # check the app's Help links against ../substratalapps-applications-specs
@@ -78,6 +79,17 @@ make run API=http://localhost:8080
 ```
 
 or choose **Settings → Connection → Local devserver** in the app. Each environment keeps its own session. Sign in with the seeded `ADMIN_EMAIL` / `ADMIN_PASSWORD` from that repo's `.env`.
+
+### Building the installer (.pkg)
+
+```bash
+scripts/build-pkg.sh                     # → build/pkg/SubstratalHub-<version>.pkg (+ .sha256)
+VERSION=0.2.0 BUILD_NUMBER=7 scripts/build-pkg.sh
+```
+
+It archives the Release configuration and packages the app to install into `/Applications` (macOS 15 or later). With `APP_IDENTITY` and `INSTALLER_IDENTITY` (Developer ID) set, it signs both. With an App Store Connect key (`NOTARY_KEY_PATH`, `NOTARY_KEY_ID`, `NOTARY_ISSUER_ID`) it also notarizes and staples. Without them it builds an unsigned test package.
+
+**Releases on GitHub:** push a tag (`git tag v0.2.0 && git push origin v0.2.0`), or run the **Release** workflow by hand. `release.yml` builds the `.pkg` and attaches it and its checksum to a GitHub Release. Without the Developer ID secrets the release is an unsigned pre-release; the secrets are listed at the top of the workflow.
 
 ### Signing
 

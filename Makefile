@@ -18,6 +18,12 @@ build: project ## Build the app (Debug)
 run: build ## Build and run; API=http://localhost:8080 points it at a local devserver
 	open $(APP) --args -SubstratalAPIBaseURL $(API)
 
+run-local: ## Build and launch for testing; API=… to choose the API (default production)
+	scripts/run-local.sh $(API)
+
+pkg: ## Build the installer into build/pkg (signs/notarizes when APP_IDENTITY etc. are set)
+	scripts/build-pkg.sh
+
 test: ## SubstratalKit unit tests
 	cd Packages/SubstratalKit && swift test
 
@@ -38,4 +44,4 @@ help-check: ## Check the app's Help links against a fresh build of the Hub help 
 
 check: test build help-check ## Everything CI runs
 
-.PHONY: help project build run test ui-test sync-api sync-screens help-check check
+.PHONY: help project build run run-local pkg test ui-test sync-api sync-screens help-check check
