@@ -12,8 +12,10 @@
 #                       Unset → ad-hoc signed: runs locally, Gatekeeper warns elsewhere.
 #   INSTALLER_IDENTITY  "Developer ID Installer: …"    signs the .pkg. Unset → unsigned .pkg.
 #   NOTARY_KEY_PATH, NOTARY_KEY_ID, NOTARY_ISSUER_ID
-#                       App Store Connect API key → notarize and staple the .pkg.
-#                       Needs both identities. Unset → not notarized.
+#                       App Store Connect API key → notarize and staple the .pkg (CI).
+#   NOTARY_PROFILE      Or a notarytool Keychain profile (on a Mac:
+#                       xcrun notarytool store-credentials <name>).
+#                       Either needs both identities. Neither → not notarized.
 #
 # Prints the .pkg path last, and writes <pkg>.sha256 next to it.
 set -euo pipefail
@@ -88,10 +90,17 @@ sign=()
 [[ -n "$INSTALLER_IDENTITY" ]] && sign=(--sign "$INSTALLER_IDENTITY" --timestamp)
 productbuild --distribution "$dist" --package-path "$OUT" ${sign[@]+"${sign[@]}"} "$PKG" >/dev/null
 
+notary=()
 if [[ -n "${NOTARY_KEY_PATH:-}" && -n "${NOTARY_KEY_ID:-}" && -n "${NOTARY_ISSUER_ID:-}" ]]; then
+  notary=(--key "$NOTARY_KEY_PATH" --key-id "$NOTARY_KEY_ID" --issuer "$NOTARY_ISSUER_ID")
+elif [[ -n "${NOTARY_PROFILE:-}" ]]; then
+  notary=(--keychain-profile "$NOTARY_PROFILE")
+fi
+
+if [[ ${#notary[@]} -gt 0 ]]; then
   [[ -n "$APP_IDENTITY" && -n "$INSTALLER_IDENTITY" ]] || { echo "build-pkg: notarizing needs APP_IDENTITY and INSTALLER_IDENTITY" >&2; exit 1; }
   step "Notarizing (this waits for Apple)"
-  xcrun notarytool submit "$PKG" --key "$NOTARY_KEY_PATH" --key-id "$NOTARY_KEY_ID" --issuer "$NOTARY_ISSUER_ID" --wait
+  xcrun notarytool submit "$PKG" "${notary[@]}" --wait
   xcrun stapler staple "$PKG"
   spctl --assess --type install --verbose "$PKG"
   status="signed, notarized and stapled"
