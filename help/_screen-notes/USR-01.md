@@ -1,5 +1,0 @@
-- **Search** matches name, email or a `usr_` ID. Searching starts at 3 characters and waits for you to stop typing.
-- **Status** filters to Active, Invited, Suspended or Deleted. Deleted accounts are only listed for staff with `users.manage`.
-- The list shows the newest accounts first. Choose **Load More** at the bottom to see older ones.
-- Right-click selected rows and choose **Copy ID** to copy their IDs, one per line.
-- **Invite User** needs `users.manage`. Without it the button is greyed out. See [Invite a user](../../tutorials/invite-a-user/).

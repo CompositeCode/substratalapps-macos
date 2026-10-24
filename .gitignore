@@ -12,18 +12,5 @@ build/
 .swiftpm/
 Packages/**/Package.resolved.bak
 
-# Help site
-help/_site/
-help/.jekyll-cache/
-help/.sass-cache/
-help/vendor/
-help/.bundle/
-help/_data/versions.yml
-help/_data/build.yml
-help/_data/screens.json
-help/screens/*.md
-!help/screens/index.md
-help/release-notes.md
-
 # macOS
 .DS_Store

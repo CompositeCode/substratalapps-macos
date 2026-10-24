@@ -54,8 +54,8 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
-        # Help Center root (help/ in this repo, on GitHub Pages).
-        SubstratalHelpBaseURL: https://compositecode.github.io/substratalapps-macos/
+        # The shared Hub help center (specs repo, help/), which every Hub app links to.
+        SubstratalHelpBaseURL: https://compositecode.github.io/substratalapps-applications-specs/help/
         CFBundleURLTypes:
           - CFBundleURLName: com.substratalapps.hub.deeplink
             CFBundleURLSchemes: [substratal]

@@ -68,10 +68,13 @@ struct NavigationTests {
         #expect(!noFlags.isVisible("flag:notifications"))
     }
 
-    @Test("Help links exist for every screen")
+    @Test("Help links point into the shared Hub help center")
     func helpLinks() {
         let help = HelpLinks()
-        #expect(help.screen("USR-01").absoluteString == "https://compositecode.github.io/substratalapps-macos/screens/usr-01/")
-        #expect(help.apiExplorer.absoluteString == "https://compositecode.github.io/substratalapps-macos/api/reference/")
+        let root = "https://compositecode.github.io/substratalapps-applications-specs/help/"
+        #expect(help.screen("USR-01").absoluteString == root + "screens/usr-01.html")
+        #expect(help.apiExplorer.absoluteString == root + "api/v1/index.html")
+        #expect(help.shortcuts.absoluteString == root + "guides/macos.html#keyboard-shortcuts")
+        #expect(help.home.absoluteString == root + "index.html")
     }
 }

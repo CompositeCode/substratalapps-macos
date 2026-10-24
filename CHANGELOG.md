@@ -1,6 +1,6 @@
 # Changelog
 
-Every release of Substratal Hub for macOS. The Help Center's Release Notes page is generated from this file. Add an entry under **Unreleased** with every change people will notice; the release workflow moves it under the version number.
+Every release of Substratal Hub for macOS. The Hub help center's What's new page covers every Hub app; this file is the macOS app's own record. Add an entry under **Unreleased** with every change people will notice; the release workflow moves it under the version number.
 
 ## Unreleased
 
@@ -11,7 +11,7 @@ Every release of Substratal Hub for macOS. The Help Center's Release Notes page 
 - **Users** (USR-01): search the user directory by name, email or ID, filter by status, and load more as you scroll.
 - **Settings → Appearance**: Match System, Light or Dark, and any of the five light and five dark Substratal themes.
 - **Settings → Connection**: switch between production and a local API devserver. Each keeps its own session.
-- Help menu: Help Center, help for the current screen, tutorials, keyboard shortcuts, FAQ, release notes, and the Platform API reference.
+- Help menu: the Substratal Hub help center (shared by every Hub app), help for the current screen, the macOS guide, keyboard shortcuts, troubleshooting, FAQ, what's new, and the Platform API reference and versioning.
 - Update notices: a banner when this version of the app is deprecated by the API, and a stop with "Update required" when the API no longer supports it.
 
 ### Platform API
