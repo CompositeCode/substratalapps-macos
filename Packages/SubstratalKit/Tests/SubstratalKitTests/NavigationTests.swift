@@ -71,7 +71,7 @@ struct NavigationTests {
     @Test("Help links point into the shared Hub help center")
     func helpLinks() {
         let help = HelpLinks()
-        let root = "https://compositecode.github.io/substratalapps-applications-specs/help/"
+        let root = "https://specs.substratalapps.com/help/"
         #expect(help.screen("USR-01").absoluteString == root + "screens/usr-01.html")
         #expect(help.apiExplorer.absoluteString == root + "api/v1/index.html")
         #expect(help.shortcuts.absoluteString == root + "guides/macos.html#keyboard-shortcuts")

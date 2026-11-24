@@ -1,4 +1,4 @@
-// SubstratalTheme.swift — generated from shared/themes/themes.json. Lives in SubstratalKit (shared by iOS and macOS).
+// SubstratalTheme.swift — generated from 00-shared/themes/themes.json. Lives in SubstratalKit (shared by iOS and macOS).
 // Five light and five dark themes. Defaults: Moss Paper (light) and Forest Floor (dark).
 import SwiftUI
 import Observation

@@ -2,13 +2,13 @@ import Foundation
 
 /// Links into the Substratal Hub help center, the one documentation reference
 /// every Hub app shares. It's built from the specs repository
-/// (`CompositeCode/substratalapps-applications-specs`, `help/` and
-/// `site/help.mjs`) and published at `…/substratalapps-applications-specs/help/`.
+/// (`CompositeCode/substratal-hub-interface-specs`, `help/` and
+/// `site/help.mjs`) and published at `https://specs.substratalapps.com/help/`.
 /// Every screen has a page at `screens/<id>.html`, generated from the same
 /// spec this app's screen catalog is imported from. CI checks that every link
 /// here exists in a fresh build of that site (`scripts/help-check.rb`).
 public struct HelpLinks: Sendable {
-    public static let defaultBase = URL(string: "https://compositecode.github.io/substratalapps-applications-specs/help/")!
+    public static let defaultBase = URL(string: "https://specs.substratalapps.com/help/")!
 
     public let base: URL
 

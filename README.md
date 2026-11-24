@@ -2,8 +2,8 @@
 
 The native macOS client for the [Substratal Apps Platform API](https://compositecode.github.io/substratalapps.com/): the Hub that staff and app developers use to run the platform (users, access, roles, Applications, API keys, webhooks, tenants and the audit log), plus every person's own apps, inbox, account and plan.
 
-- **UI spec:** [substratalapps-applications-specs → macOS](https://compositecode.github.io/substratalapps-applications-specs/) (75 screens, the source of truth for screens, copy and behavior)
-- **Help:** the shared [Substratal Hub help center](https://compositecode.github.io/substratalapps-applications-specs/help/), the one documentation reference for every Hub app. Its source is `help/` in the [specs repo](https://github.com/CompositeCode/substratalapps-applications-specs); the macOS pages are [Using the Hub on macOS](https://compositecode.github.io/substratalapps-applications-specs/help/guides/macos.html) and [Troubleshooting](https://compositecode.github.io/substratalapps-applications-specs/help/guides/troubleshooting.html).
+- **UI spec:** [Hub interface specifications → macOS](https://specs.substratalapps.com/platforms/macos.html) (75 screens, the source of truth for screens, copy and behavior)
+- **Help:** the shared [Substratal Hub help center](https://specs.substratalapps.com/help/), the one documentation reference for every Hub app. Its source is `help/` in the [specs repo](https://github.com/CompositeCode/substratal-hub-interface-specs); the macOS pages are [Using the Hub on macOS](https://specs.substratalapps.com/help/guides/macos.html) and [Troubleshooting](https://specs.substratalapps.com/help/guides/troubleshooting.html).
 - **Plans:** [docs/PLAN-management-app.md](docs/PLAN-management-app.md) · [docs/PLAN-api-gaps.md](docs/PLAN-api-gaps.md) · [docs/PREREQUISITES.md](docs/PREREQUISITES.md)
 
 ## Status
@@ -31,7 +31,7 @@ GET https://api.substratalapps.com/users/me      ← no /v1
 Substratal-Version: 1
 ```
 
-`/v1/…` paths return `404`. The version is the compile-time constant `APIVersion.current` in `SubstratalKit`, and `VersionMiddleware` adds the header to every request, so no call can forget it. Moving to a new API version is a code change, never configuration. See [API versioning](https://compositecode.github.io/substratalapps-applications-specs/help/developers/api-versioning.html) in the help center.
+`/v1/…` paths return `404`. The version is the compile-time constant `APIVersion.current` in `SubstratalKit`, and `VersionMiddleware` adds the header to every request, so no call can forget it. Moving to a new API version is a code change, never configuration. See [API versioning](https://specs.substratalapps.com/help/developers/api-versioning.html) in the help center.
 
 ## Layout
 
@@ -64,7 +64,7 @@ make build       # or open SubstratalHub.xcodeproj and run the SubstratalHub sch
 scripts/run-local.sh   # build and launch against the production API (or pass http://localhost:8080)
 make run         # build and launch against production
 make test        # SubstratalKit unit tests
-make help-check  # check the app's Help links against ../substratalapps-applications-specs
+make help-check  # check the app's Help links against https://specs.substratalapps.com/help/
 make check       # everything CI runs
 ```
 
@@ -110,7 +110,7 @@ The screen catalog drives the sidebar, menus, routes and deep links. The help ce
 
 The app's documentation is the shared Hub help center, in the specs repo, not here:
 
-- **Writing docs:** edit `help/` in [substratalapps-applications-specs](https://github.com/CompositeCode/substratalapps-applications-specs) (guides, tutorials, developer pages, FAQ, optional per-screen notes). See its `help/README.md`. Per-screen pages, the versioned API reference and What's new are generated there on every build.
+- **Writing docs:** edit `help/` in [substratal-hub-interface-specs](https://github.com/CompositeCode/substratal-hub-interface-specs) (guides, tutorials, developer pages, FAQ, optional per-screen notes). See its `help/README.md`. Per-screen pages, the versioned API reference and What's new are generated there on every build.
 - **When this app changes:** `docs-dispatch.yml` sends `app-docs-updated` to the specs repo on every merge to `main`, which rebuilds and republishes the help center. It needs the `SPECS_DOCS_TOKEN` secret; without it, the help center rebuilds daily.
 - **When the API changes:** the help center rebuilds its API reference from the live `openapi.yaml` daily and on `api-contract-updated`. This repo's `upstream-sync.yml` opens a PR that updates the app's generated client.
 - **Links can't break:** CI builds the help center and runs `scripts/help-check.rb`, so a screen without a help page, or a Help menu item pointing nowhere, fails the build.
