@@ -4,11 +4,11 @@
 # Imports the macOS screen inventory from the UI spec into the screen catalog
 # that both the app and the help site read.
 #
-#   scripts/import-screens.rb [SPECS_DIR]
+#   scripts/import-screens.rb [SPECS]
 #
-# SPECS_DIR is a checkout of CompositeCode/substratalapps-applications-specs
-# (default: ../substratalapps-applications-specs). It reads
-# substratal-application-specs/macos/SCREENS.md and writes
+# SPECS is the published spec (default: https://specs.substratalapps.com/spec/)
+# or a checkout of CompositeCode/substratal-hub-interface-specs. It reads
+# macos/SCREENS.md and macos/README.md from the spec and writes
 # Packages/SubstratalKit/Sources/SubstratalKit/Resources/screens.json.
 #
 # The spec is the source of truth for each screen's id, title, domain, route,
@@ -19,12 +19,26 @@
 # then commit the result: CI fails if the help site has no page for a screen.
 
 require "json"
+require "net/http"
+require "uri"
 
 ROOT = File.expand_path("..", __dir__)
-specs = File.expand_path(ARGV[0] || File.join(ROOT, "..", "substratalapps-applications-specs"))
-source = File.join(specs, "substratal-application-specs", "macos", "SCREENS.md")
+specs = ARGV[0] || "https://specs.substratalapps.com/spec/"
+# A spec file's text, from the published site or a checkout (specs/, or
+# substratal-application-specs/ before spec 2.0.0).
+read_spec = lambda do |rel|
+  if specs.match?(%r{\Ahttps?://})
+    res = Net::HTTP.get_response(URI.join(specs.end_with?("/") ? specs : "#{specs}/", rel))
+    abort "import-screens: #{rel}: HTTP #{res.code} from #{specs}" unless res.is_a?(Net::HTTPSuccess)
+    res.body.force_encoding("UTF-8")
+  else
+    dir = %w[specs substratal-application-specs].map { |d| File.join(File.expand_path(specs), d) }.find { |d| File.directory?(d) }
+    abort "import-screens: #{specs} has no specs/ directory" unless dir
+    File.read(File.join(dir, rel))
+  end
+end
+source = "macos/SCREENS.md"
 out = File.join(ROOT, "Packages", "SubstratalKit", "Sources", "SubstratalKit", "Resources", "screens.json")
-abort "import-screens: #{source} not found" unless File.exist?(source)
 
 # Sidebar destinations, in order. `visible_when` names a Capabilities rule
 # (see Capabilities.swift); `shortcut` is the menu key equivalent.
@@ -47,7 +61,7 @@ SIDEBAR = {
 }.freeze
 
 screens = []
-lines = File.readlines(source, chomp: true)
+lines = read_spec.call(source).lines(chomp: true)
 lines.each_with_index do |line, i|
   next unless (m = line.match(/\A### ([A-Z]+-\d+) — (.+)\z/))
 
@@ -76,9 +90,9 @@ abort "import-screens: no screens parsed from #{source}" if screens.empty?
 missing = SIDEBAR.keys - screens.map { |s| s[:id] }
 abort "import-screens: sidebar screens missing from the spec: #{missing.join(', ')}" unless missing.empty?
 
-spec_version = File.read(File.join(specs, "substratal-application-specs", "macos", "README.md"))[/\*\*API:\*\*\s*([^\n]+)/, 1]
+spec_version = read_spec.call("macos/README.md")[/\*\*API:\*\*\s*([^\n]+)/, 1]
 doc = {
-  "_generated" => "by scripts/import-screens.rb from substratalapps-applications-specs/macos/SCREENS.md; edit the spec, then re-run",
+  "_generated" => "by scripts/import-screens.rb from the Hub specs' macos/SCREENS.md (https://specs.substratalapps.com/spec/); edit the spec, then re-run",
   "spec" => spec_version&.strip,
   "screens" => screens,
 }

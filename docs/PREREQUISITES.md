@@ -20,7 +20,7 @@ Verified on production on 2026-10-23:
 | `GET /permissions` without the header | `400 api_version_required`, `details.supported: ["1"]` |
 | `GET /permissions` with `Substratal-Version: 1`, no token | `401 unauthenticated`, and the response echoes `substratal-version: 1` |
 
-In this app: the base URL is the host root (`APIEnvironment.baseURL`). `APIVersion.current` is a compile-time constant, and `VersionMiddleware` stamps the header on every request, including the exempt ones, which is harmless. It also records `Deprecation`/`Sunset` and `400 unsupported_api_version` in `APIVersionMonitor`, which drives the GLB-03 banners. Unit tests cover each of these. The Hub help center documents the scheme for integrators ([API versioning](https://compositecode.github.io/substratalapps-applications-specs/help/developers/api-versioning.html)).
+In this app: the base URL is the host root (`APIEnvironment.baseURL`). `APIVersion.current` is a compile-time constant, and `VersionMiddleware` stamps the header on every request, including the exempt ones, which is harmless. It also records `Deprecation`/`Sunset` and `400 unsupported_api_version` in `APIVersionMonitor`, which drives the GLB-03 banners. Unit tests cover each of these. The Hub help center documents the scheme for integrators ([API versioning](https://specs.substratalapps.com/help/developers/api-versioning.html)).
 
 ## Development machine
 
@@ -56,7 +56,7 @@ In this app: the base URL is the host root (`APIEnvironment.baseURL`). `APIVersi
 |---|---|---|
 | This repo's GitHub remote | ✅ | [`CompositeCode/substratalapps-macos`](https://github.com/CompositeCode/substratalapps-macos), **private**, created 2026-10-23; `main` pushed. |
 | GitHub Actions | ❌ **billing** | The first runs (2026-10-23) weren't started: "recent account payments have failed or your spending limit needs to be increased". Fix under the CompositeCode org's **Settings → Billing & plans**. Until then CI doesn't run; run `make check` locally. macOS runners use the most minutes, so set a spending limit that covers them. |
-| Help center | ✅ | Not hosted here. The app's documentation lives in the shared **Hub help center** in the public specs repo, published at `https://compositecode.github.io/substratalapps-applications-specs/help/`. The macOS guide and troubleshooting pages were moved there in [specs PR #2](https://github.com/CompositeCode/substratalapps-applications-specs/pull/2). This repo's Pages, which the plan doesn't support for a private repo, isn't needed. |
+| Help center | ✅ | Not hosted here. The app's documentation lives in the shared **Hub help center** in the specs repo (private), published at `https://specs.substratalapps.com/help/`. The macOS guide and troubleshooting pages were moved there in [specs PR #2](https://github.com/CompositeCode/substratal-hub-interface-specs/pull/2). This repo's Pages, which the plan doesn't support for a private repo, isn't needed. |
 | `SPECS_DOCS_TOKEN` secret | ❌ optional | Lets `docs-dispatch.yml` tell the help center to rebuild as soon as this app merges. Without it, the help center rebuilds daily. |
 | API repo `openapi.yaml` (raw, `main`) | ✅ | `200`. `scripts/sync-openapi.sh` vendors it; a scheduled workflow keeps it current. |
 | Specs repo | ✅ | Up to date (`cebf679`, targets API v1.8.0). `scripts/import-screens.rb` imports its 75 macOS screens. |

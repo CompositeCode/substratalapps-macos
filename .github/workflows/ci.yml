@@ -56,15 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/checkout@v7
-        with:
-          repository: CompositeCode/substratalapps-applications-specs
-          path: _specs
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 22
-      - name: Build the help center
-        working-directory: _specs
-        run: npm ci && npm run build
+      # The published help center: the specs repository is private, so this
+      # public repository's token can't check it out and build it.
       - name: Check every screen page and Help menu link
-        run: ruby scripts/help-check.rb _specs/_site/help
+        run: ruby scripts/help-check.rb https://specs.substratalapps.com/help/

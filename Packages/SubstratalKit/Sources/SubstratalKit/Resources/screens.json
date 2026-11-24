@@ -1,6 +1,6 @@
 {
-  "_generated": "by scripts/import-screens.rb from substratalapps-applications-specs/macos/SCREENS.md; edit the spec, then re-run",
-  "spec": "Substratal Apps Platform API v1.8.0 (openapi 1.0.0-draft.9; send `Substratal-Version: 1` on every request, no `/v1` in paths) — https://compositecode.github.io/substratalapps.com/",
+  "_generated": "by scripts/import-screens.rb from the Hub specs' macos/SCREENS.md (https://specs.substratalapps.com/spec/); edit the spec, then re-run",
+  "spec": "Substratal Apps Platform API, `openapi.yaml` 1.0.0-draft.33 (API docs v1.9.2; send `Substratal-Version: 1` on every request, no `/v1` in paths) — https://compositecode.github.io/substratalapps.com/",
   "screens": [
     {
       "id": "AUTH-01",
@@ -20,7 +20,7 @@
       "archetype": "auth",
       "phase": "MVP",
       "audience": "Holder of mfa_token",
-      "purpose": "Complete sign-in with a TOTP code or a recovery code."
+      "purpose": "Complete sign-in with a passkey, a TOTP code or a recovery code."
     },
     {
       "id": "AUTH-03",
@@ -128,7 +128,7 @@
       "archetype": "wizard",
       "phase": "MVP",
       "audience": "Self",
-      "purpose": "Enroll an authenticator app (TOTP) and save recovery codes."
+      "purpose": "Turn on two-step verification with a passkey (recommended) or an authenticator app (TOTP), and save recovery codes."
     },
     {
       "id": "ACC-06",
@@ -467,7 +467,7 @@
       "route": "/admin/roles",
       "archetype": "list",
       "phase": "MVP",
-      "audience": "users.list (read), roles.manage (write)",
+      "audience": "users.list (read), roles.manage (write); an Application's owner reads and edits that Application's roles without a platform permission",
       "purpose": "Platform and app roles.",
       "sidebar": {
         "section": "administration",
@@ -485,7 +485,7 @@
       "route": "/admin/roles/:roleId",
       "archetype": "detail",
       "phase": "MVP",
-      "audience": "users.list (read), roles.manage (write)",
+      "audience": "users.list (read), roles.manage (write); an Application's owner, for that Application's roles",
       "purpose": "View or edit a role's permissions."
     },
     {
@@ -516,7 +516,7 @@
       "archetype": "list",
       "phase": "MVP",
       "audience": "Any (catalog), owner/applications.manage (manage)",
-      "purpose": "Applications you own or administer.",
+      "purpose": "Applications you own or administer, and (staff) the review queue.",
       "sidebar": {
         "section": "developer",
         "label": "Applications",
@@ -543,8 +543,8 @@
       "route": "/dev/apps/:appId",
       "archetype": "detail",
       "phase": "MVP",
-      "audience": "Owner (configure), applications.manage (anything)",
-      "purpose": "Configure an application."
+      "audience": "Owner (configure), applications.manage (anything, including retire and delete)",
+      "purpose": "Configure an application, and (staff) review, retire or delete it."
     },
     {
       "id": "APL-04",
@@ -642,7 +642,7 @@
       "archetype": "list",
       "phase": "Phase 2",
       "audience": "webhooks.manage or app owner",
-      "purpose": "Endpoints that receive access-change events.",
+      "purpose": "Endpoints that receive access-change events, and failed deliveries across all of them.",
       "sidebar": {
         "section": "developer",
         "label": "Webhooks",
@@ -718,7 +718,7 @@
       "archetype": "handoff",
       "phase": "Phase 2",
       "audience": "Self (individual); org_admin (org checkout); org_admin or billing.manage (org portal)",
-      "purpose": "Hand off to Stripe in the browser and confirm the result on return."
+      "purpose": "Hand off to the payment page or billing portal in the browser and confirm the result on return."
     },
     {
       "id": "BIL-04",

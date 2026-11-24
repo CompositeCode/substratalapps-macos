@@ -53,7 +53,7 @@ struct ScreenPlaceholder: View {
     }
 
     private var specURL: URL {
-        URL(string: "https://compositecode.github.io/substratalapps-applications-specs/spec/macos/SCREENS.html")!
+        URL(string: "https://specs.substratalapps.com/spec/macos/SCREENS.html")!
     }
 
     @ViewBuilder

@@ -33,14 +33,11 @@ ui-test: project ## UI smoke tests (needs Accessibility permission for Xcode)
 sync-api: ## Vendor the latest openapi.yaml from the API repo's main
 	scripts/sync-openapi.sh
 
-sync-screens: ## Re-import the screen catalog from ../substratalapps-applications-specs
+sync-screens: ## Re-import the screen catalog from https://specs.substratalapps.com/spec/
 	ruby scripts/import-screens.rb
 
-SPECS ?= ../substratalapps-applications-specs
-
-help-check: ## Check the app's Help links against a fresh build of the Hub help center in SPECS
-	cd $(SPECS) && npm ci --silent && npm run build
-	ruby scripts/help-check.rb $(SPECS)/_site/help
+help-check: ## Check the app's Help links against https://specs.substratalapps.com/help/
+	ruby scripts/help-check.rb
 
 check: test build help-check ## Everything CI runs
 
